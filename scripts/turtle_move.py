@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
+
 import math
 import rospy
 from geometry_msgs.msg import Twist
 from turtlesim.msg import Pose
 import math
 import time
-#from std_srvs import Empty
 
-# 
+# Initial Robot Pose paramters
 x = 0
 y = 0
 z = 0
@@ -19,16 +18,19 @@ yaw = 0
 #rostopic info turtle1/pose
 #rosmsg show turtlesim/Pose
 
+# callback funcion - updates the robot pose paramters
 def poseCallback(pose_message):
     global x, y, z, yaw
     x = pose_message.x
     y = pose_message.y
     yaw = pose_message.theta
 
+# calculates the distance between the current and innitial robot position
 def euc_distance(x0, x, y0, y):
     distance = abs(0.5 * math.sqrt(((x - x0) ** 2) + ((y - y0) ** 2)))
     return distance
 
+# rotates the robot for the desired angular distance in the desired direction
 def turtle_rotate(angle, angular_speed, is_clockwise):
     angle_rads = math.radians(angle)
     yaw0 = yaw
@@ -60,7 +62,7 @@ def turtle_rotate(angle, angular_speed, is_clockwise):
     cmd_velocity.angular.z = 0.0
     velocity_publisher.publish(cmd_velocity)       
 
-
+# moves the robot for the desired distance in the x direction
 def turtle_move(distance, speed, is_forward):
     global x, y
     x0 = x
